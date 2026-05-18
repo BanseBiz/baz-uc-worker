@@ -12,6 +12,7 @@ class Worker {
     void begin();
     void end();
     virtual void init() = 0;
+    TaskHandle_t getTaskHandle() { return _task_handle; }
   
   protected:
     static void task(void* params);
