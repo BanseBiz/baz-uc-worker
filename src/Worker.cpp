@@ -4,6 +4,7 @@
 #define WORKER_NAME(id) "worker_"+id
 
 uint16_t Worker::_worker_cnt = 0;
+std::vector<Worker*> Worker::_workers;
 
 Worker::Worker (
     float rate,
@@ -12,7 +13,8 @@ Worker::Worker (
     _delay((uint16_t)(1000.f/rate)),
     _stack_size(stack_size)
 {
-
+    _workers.push_back(this);
+    _worker_cnt++;
 }
 
 void Worker::begin() {
@@ -51,4 +53,16 @@ void Worker::task(void* params) {
     Worker* instance = (Worker*) params;
     instance->call();
     vTaskDelete(NULL);
+}
+
+void Worker::all_begin() {
+    for (auto worker : _workers) {
+        worker->begin();
+    }
+}
+
+void Worker::all_init() {
+    for (auto worker : _workers) {
+        worker->init();
+    }
 }
