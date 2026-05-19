@@ -41,7 +41,9 @@ void Worker::call() {
     while(true) {
         last_wake_time = xTaskGetTickCount();
         loop();
-        vTaskDelayUntil(&last_wake_time, frequency);
+        if (_delay > 1) {
+            vTaskDelayUntil(&last_wake_time, frequency);
+        }
     }
 }
 
