@@ -14,8 +14,7 @@ class Worker {
     void end();
     virtual void init() = 0;
     TaskHandle_t getTaskHandle() { return _task_handle; }
-    static void all_begin();
-    static void all_init();
+    //static void all_begin();
   
   protected:
     static void task(void* params);
@@ -26,5 +25,5 @@ class Worker {
     const uint16_t _delay;
     const uint16_t _stack_size;
     static uint16_t _worker_cnt;
-    static std::vector<Worker*> _workers;
+    //static std::vector<Worker*> _workers;
 };

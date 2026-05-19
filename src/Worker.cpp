@@ -4,7 +4,7 @@
 #define WORKER_NAME(id) "worker_"+id
 
 uint16_t Worker::_worker_cnt = 0;
-std::vector<Worker*> Worker::_workers;
+//std::vector<Worker*> Worker::_workers;
 
 Worker::Worker (
     float rate,
@@ -13,7 +13,7 @@ Worker::Worker (
     _delay((uint16_t)(1000.f/rate)),
     _stack_size(stack_size)
 {
-    _workers.push_back(this);
+    //_workers.push_back(this);
     _worker_cnt++;
 }
 
@@ -39,13 +39,12 @@ void Worker::end() {
 
 void Worker::call() {
     TickType_t last_wake_time;
-    const TickType_t frequency = pdMS_TO_TICKS(_delay);
+    TickType_t frequency = pdMS_TO_TICKS(_delay);
+    if (frequency == 0) frequency = 1;
+    last_wake_time = xTaskGetTickCount();
     while(true) {
-        last_wake_time = xTaskGetTickCount();
         loop();
-        if (_delay > 1) {
-            vTaskDelayUntil(&last_wake_time, frequency);
-        }
+        vTaskDelayUntil(&last_wake_time, frequency);
     }
 }
 
@@ -55,14 +54,9 @@ void Worker::task(void* params) {
     vTaskDelete(NULL);
 }
 
-void Worker::all_begin() {
-    for (auto worker : _workers) {
-        worker->begin();
-    }
-}
-
-void Worker::all_init() {
+/*void Worker::all_begin() {
     for (auto worker : _workers) {
         worker->init();
+        worker->begin();
     }
-}
+}*/
